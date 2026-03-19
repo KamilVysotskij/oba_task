@@ -52,6 +52,21 @@ class OrganizationQueryService:
             for organization in organizations
         ]
 
+    async def list_by_activity_id(
+        self,
+        activity_id: int,
+    ) -> list[OrganizationRead]:
+        activity = await self.activities.get_by_id(activity_id)
+        if activity is None:
+            raise EntityNotFoundError('Activity not found.')
+        organizations = await self.organizations.list_by_activity_ids(
+            [activity_id]
+        )
+        return [
+            OrganizationRead.from_entity(organization)
+            for organization in organizations
+        ]
+
     async def search_by_name(self, query: str) -> list[OrganizationRead]:
         organizations = await self.organizations.search_by_name(query)
         return [

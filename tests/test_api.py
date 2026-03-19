@@ -2,7 +2,11 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from tests.conftest import get_building_id, get_organization_id
+from tests.conftest import (
+    get_activity_id,
+    get_building_id,
+    get_organization_id,
+)
 
 API_KEY_HEADER = {'X-API-Key': 'dev-api-key'}
 pytestmark = pytest.mark.anyio
@@ -75,6 +79,22 @@ async def test_search_activity_by_name_includes_descendants(
     assert 'Кафе "Уют"' in names
     assert 'Городское кафе' in names
     assert 'Фермер Центр' in names
+
+
+async def test_list_organizations_by_exact_activity_id(
+    client: AsyncClient,
+    seeded_session: AsyncSession,
+) -> None:
+    activity_id = await get_activity_id(seeded_session, 'Грузовые')
+
+    response = await client.get(
+        f'/api/v1/organizations/by-activity/{activity_id}',
+        headers=API_KEY_HEADER,
+    )
+
+    assert response.status_code == 200
+    names = {item['name'] for item in response.json()}
+    assert names == {'Грузовик Сервис'}
 
 
 async def test_search_nested_activity_by_name_includes_descendants(

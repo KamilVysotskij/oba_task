@@ -25,6 +25,19 @@ async def list_organizations_by_building(
 
 
 @router.get(
+    '/by-activity/{activity_id}',
+    response_model=list[OrganizationRead],
+    summary='Получить организации по виду деятельности',
+)
+async def list_organizations_by_activity_id(
+    activity_id: int = Path(..., gt=0),
+    *,
+    service: get_organization_query_service_dep,
+) -> list[OrganizationRead]:
+    return await service.list_by_activity_id(activity_id)
+
+
+@router.get(
     '/by-activity',
     response_model=list[OrganizationRead],
     summary='Получить организации по виду деятельности и вложенным видам',

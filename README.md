@@ -26,7 +26,7 @@ make up
 
 - Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
 - ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- Healthcheck: [http://localhost:8000/health](http://localhost:8000/health)
+- Healthcheck: [http://localhost:8000/health](http://localhost:8000/health) (`X-API-Key` обязателен)
 
 Остановка:
 
